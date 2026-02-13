@@ -983,7 +983,7 @@ with tab3:
     """, unsafe_allow_html=True)
     
     if not ROUTE_PLANNER_AVAILABLE:
-        st.warning("⚠️ **Route Planner Module Not Available**\n\nThe `route_planner` module is not installed. Install dependencies with:\n\n```bash\npip install -r requirements.txt\n```")
+        st.info("ℹ️ **Route Planner unavailable on Cloud**\n\nThe safe route analyzer requires PyTorch, which is resource-intensive. This feature works great locally!\n\n**Try the other features:**\n- ⚙️ Gear Load Optimizer\n- 🏃 Climbing Movement Analyzer")
     else:
         # Professional upload section
         st.markdown("""

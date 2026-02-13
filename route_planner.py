@@ -14,11 +14,18 @@ Pipeline:
 
 import cv2
 import numpy as np
-import torch
-import torchvision.transforms as transforms
 from pathlib import Path
 from typing import Tuple, List, Dict, Optional
 import heapq
+
+try:
+    import torch
+    import torchvision.transforms as transforms
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    torch = None
+    transforms = None
 
 
 # ============================================================================
@@ -52,16 +59,26 @@ class TerrainSegmenter:
             model_name: 'deeplabv3plus', 'upernet', or 'fcn'
         """
         self.model_name = model_name
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = None
-        self.transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                               std=[0.229, 0.224, 0.225])
-        ])
+        self.transform = None
+        
+        if TORCH_AVAILABLE:
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                   std=[0.229, 0.224, 0.225])
+            ])
+        else:
+            self.device = "cpu"
     
     def load_model(self):
         """Load pre-trained segmentation model from torchvision."""
+        if not TORCH_AVAILABLE:
+            print("⚠ PyTorch not available - using fallback segmentation")
+            self.model = None
+            return
+            
         try:
             if self.model_name == "deeplabv3plus":
                 from torchvision.models.segmentation import deeplabv3_resnet101
