@@ -1,0 +1,32 @@
+# ClimbAssist AI - Complete Requirements
+# Climbing video analysis + safe route planning system
+
+# Core ML & Vision
+torch>=2.0.0
+torchvision>=0.15.0
+opencv-python>=4.8.0
+numpy>=1.23.0
+scipy>=1.10.0
+scikit-image>=0.21.0
+
+# Segmentation & Depth Models
+segmentation-models-pytorch>=0.3.3
+timm>=0.9.0
+Pillow>=9.5.0
+
+# TensorFlow (for MoveNet pose estimation - used in current app)
+tensorflow>=2.13.0
+tensorflow-hub>=0.13.0
+
+# PDF Generation
+fpdf2>=2.7.0
+
+# Streamlit Web UI
+streamlit>=1.28.0
+
+# Utilities
+scikit-learn>=1.3.0
+networkx>=3.1
+
+# Optional: visualization
+matplotlib>=3.7.0
