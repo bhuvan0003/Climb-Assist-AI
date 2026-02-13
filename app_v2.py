@@ -10,7 +10,9 @@ Integrated platform for:
 import streamlit as st
 try:
     import cv2
+    CV2_AVAILABLE = True
 except ImportError:
+    CV2_AVAILABLE = False
     cv2 = None
 import numpy as np
 from io import BytesIO
@@ -24,7 +26,7 @@ except ImportError:
     ROUTE_PLANNER_AVAILABLE = False
 try:
     from pose_visualizer import PoseVisualizer, ImprovementAdvisor
-    POSE_VISUALIZER_AVAILABLE = True
+    POSE_VISUALIZER_AVAILABLE = True and CV2_AVAILABLE
 except ImportError:
     POSE_VISUALIZER_AVAILABLE = False
 
@@ -674,25 +676,25 @@ with tab2:
     st.markdown("## 🎥 Climb Movement Analyzer")
     st.markdown("<p style='color: #a5b4fc; margin-bottom: 1.5rem;'>Upload a climbing video to receive AI-powered movement analysis and personalized feedback.</p>", unsafe_allow_html=True)
     
-    video_tips = [
-        "🎯 Best results: Side-angle view with full body visible",
-        "🎯 Ensure good lighting for accurate pose detection",
-        "🎯 Capture 10-30 seconds of continuous climbing",
-    ]
-    st.markdown(f"<p style='color: #34d399; font-size: 0.9rem; margin-bottom: 1rem;'>{random.choice(video_tips)}</p>", unsafe_allow_html=True)
-    
-    st.markdown('<div class="upload-zone">', unsafe_allow_html=True)
-    st.markdown('<h3>📤 Upload Your Climbing Video</h3>')
-    st.markdown('<p style="color: #a5b4fc;">Supported formats: MP4, MPEG4 • Max size: 200 MB</p>')
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    uploaded_video = st.file_uploader("Upload Climbing Video", type=["mp4", "mpeg4"], label_visibility="collapsed")
-    
-    if uploaded_video is None:
-        st.info("📋 **How it works:**\n1. Upload a video of your climbing\n2. Our AI analyzes your body movements\n3. Get detailed feedback and personalized recommendations")
+    if not CV2_AVAILABLE or not POSE_VISUALIZER_AVAILABLE:
+        st.info("ℹ️ **Movement Analyzer unavailable on Cloud**\n\nThe climbing movement analyzer requires OpenCV, which is resource-intensive. This feature works great locally!\n\n**Try the other features:**\n- ⚙️ Gear Load Optimizer\n- 🗺️ Route Planner (local)")
     else:
-        if cv2 is None:
-            st.error("❌ OpenCV (cv2) is not installed. Please run 'pip install opencv-python' and restart the app.")
+        video_tips = [
+            "🎯 Best results: Side-angle view with full body visible",
+            "🎯 Ensure good lighting for accurate pose detection",
+            "🎯 Capture 10-30 seconds of continuous climbing",
+        ]
+        st.markdown(f"<p style='color: #34d399; font-size: 0.9rem; margin-bottom: 1rem;'>{random.choice(video_tips)}</p>", unsafe_allow_html=True)
+        
+        st.markdown('<div class="upload-zone">', unsafe_allow_html=True)
+        st.markdown('<h3>📤 Upload Your Climbing Video</h3>')
+        st.markdown('<p style="color: #a5b4fc;">Supported formats: MP4, MPEG4 • Max size: 200 MB</p>')
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        uploaded_video = st.file_uploader("Upload Climbing Video", type=["mp4", "mpeg4"], label_visibility="collapsed")
+        
+        if uploaded_video is None:
+            st.info("📋 **How it works:**\n1. Upload a video of your climbing\n2. Our AI analyzes your body movements\n3. Get detailed feedback and personalized recommendations")
         else:
             st.markdown(f"<div style='background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 8px;'><span style='color:#c4b5fd;'>📄 <b>File:</b> {uploaded_video.name} | <b>Size:</b> {round(uploaded_video.size/1024/1024, 2)} MB</span></div>", unsafe_allow_html=True)
             

@@ -4,7 +4,13 @@ Pose Visualization Module
 Visualize MoveNet keypoints and detect climbing-specific issues with visual feedback.
 """
 
-import cv2
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+    cv2 = None
+    
 import numpy as np
 from typing import Tuple, List, Dict
 
@@ -35,6 +41,8 @@ class PoseVisualizer:
     COLOR_SKELETON = (255, 0, 0)  # Blue for skeleton
     
     def __init__(self, frame_width: int = 640, frame_height: int = 480):
+        if not CV2_AVAILABLE:
+            raise ImportError("OpenCV (cv2) is required for pose visualization. Please install it: pip install opencv-python")
         self.frame_width = frame_width
         self.frame_height = frame_height
     
