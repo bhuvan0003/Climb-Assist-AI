@@ -583,6 +583,24 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------------------------------------
+# Feature Availability Banner
+# -------------------------------------------------
+col1, col2, col3 = st.columns(3)
+with col1:
+    status = "✅ Full" if True else "❌ Unavailable"
+    st.markdown(f"**⚙️ Gear Optimizer:** {status}")
+
+with col2:
+    status = "✅ Full" if CV2_AVAILABLE else "⚠️ Cloud Only"
+    st.markdown(f"**🎥 Movement Analyzer:** {status}")
+
+with col3:
+    status = "✅ Full" if ROUTE_PLANNER_AVAILABLE else "⚠️ Cloud Only"
+    st.markdown(f"**🗺️ Route Finder:** {status}")
+
+st.markdown("---")
+
+# -------------------------------------------------
 # Tab Navigation
 # -------------------------------------------------
 tab1, tab2, tab3 = st.tabs([
