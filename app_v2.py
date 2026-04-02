@@ -41,20 +41,39 @@ def load_movenet_model():
     import tensorflow.compat.v1 as tf
     import tensorflow_hub as hub
     import time
+    import os
+    import shutil
     
     # Suppress TensorFlow warnings
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
     
     # Try to load the model with retry logic
     max_retries = 3
+    model_url = "https://tfhub.dev/google/movenet/singlepose/lightning/4"
+    
     for attempt in range(max_retries):
         try:
-            model = hub.load("https://tfhub.dev/google/movenet/singlepose/lightning/4")
-            return model.signatures['serving_default']
+            # Clear cache before loading if this is a retry
+            if attempt > 0:
+                cache_dir = os.path.join(os.environ.get('TEMP', '/tmp'), 'tfhub_modules')
+                if os.path.exists(cache_dir):
+                    shutil.rmtree(cache_dir, ignore_errors=True)
+                    print(f"Cleared TensorFlow Hub cache for retry {attempt}")
+            
+            print(f"Loading MoveNet model (attempt {attempt + 1}/{max_retries})...")
+            model = hub.load(model_url)
+            
+            # Validate model loaded correctly
+            if hasattr(model, 'signatures') and 'serving_default' in model.signatures:
+                return model.signatures['serving_default']
+            else:
+                raise ValueError("Model loaded but missing serving_default signature")
+                
         except (ValueError, Exception) as e:
+            print(f"Attempt {attempt + 1} failed: {str(e)}")
             if attempt < max_retries - 1:
-                print(f"Attempt {attempt + 1} failed to load model. Retrying in 3 seconds...")
-                time.sleep(3)
+                print(f"Retrying in 5 seconds...")
+                time.sleep(5)
             else:
                 raise ValueError(f"Failed to load MoveNet model after {max_retries} attempts: {str(e)}")
 
