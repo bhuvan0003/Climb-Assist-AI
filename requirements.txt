@@ -1,28 +1,15 @@
-# ClimbAssist AI - Complete Local Requirements
-# Contains all features for local machine deployment
-# For Streamlit Cloud, use: requirements-cloud.txt
+# ClimbAssist AI - Requirements
+# Optimized for Streamlit Cloud deployment
+# For local dev with full features, also install: opencv-python torch torchvision
 
-# Web App Framework
+# Core
 streamlit>=1.28.0
-
-# Core ML & Vision
 numpy>=1.23.0
 scipy>=1.10.0
 Pillow>=9.5.0
-scikit-image>=0.21.0
 
-# PyTorch (for route planning & segmentation)
-# These are optional - app works without them, just with reduced features
-torch>=2.0.0 ; sys_platform != 'win32' or python_version < '3.12'
-torchvision>=0.15.0 ; sys_platform != 'win32' or python_version < '3.12'
-segmentation-models-pytorch>=0.3.3 ; sys_platform != 'win32' or python_version < '3.12'
-timm>=0.9.0 ; sys_platform != 'win32' or python_version < '3.12'
-
-# OpenCV (for video processing)
-opencv-python>=4.8.0
-
-# TensorFlow (for MoveNet pose estimation)
-tensorflow>=2.13.0
+# TensorFlow for MoveNet pose detection (CPU version for cloud)
+tensorflow-cpu>=2.13.0
 tensorflow-hub>=0.13.0
 
 # PDF Generation
