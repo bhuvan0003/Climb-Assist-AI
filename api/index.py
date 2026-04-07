@@ -8,10 +8,11 @@ and returns basic usage information.
 
 def app(environ, start_response):
     body = (
-        "ClimbAssist AI is a Streamlit application.\n\n"
+        "ClimbAssist AI v2 is a Streamlit application.\n\n"
         "Recommended hosting: Streamlit Community Cloud\n"
-        "Main file: app_v2.py\n"
-        "Run locally: streamlit run app_v2.py\n"
+        "Entry point: app.py\n"
+        "Main package: src/climbassist/\n"
+        "Run locally: streamlit run app.py\n"
     ).encode("utf-8")
 
     headers = [

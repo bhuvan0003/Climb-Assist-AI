@@ -44,3 +44,18 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Temp files
+temp_*.mp4
+*.mp4
+*.log
+gcm-diagnose.log
+
+# Build
+*.egg-info/
+dist/
+build/
+
+# Coverage
+.coverage
+htmlcov/
